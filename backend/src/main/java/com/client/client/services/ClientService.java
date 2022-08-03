@@ -5,6 +5,7 @@ import com.client.client.entitites.Client;
 import com.client.client.repositories.ClientRepository;
 import com.client.client.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,14 @@ public class ClientService {
             entity = clientRepository.save(entity);
             return new ClientDTO(entity);
         } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Id not found " + id);
+        }
+    }
+
+    public void delete(Long id) {
+        try{
+            clientRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException("Id not found " + id);
         }
     }
